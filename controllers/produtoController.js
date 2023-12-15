@@ -29,14 +29,11 @@ exports.verProdutoEspecifico = async (req, res) => {
 exports.adicionarNovoProduto = async (req, res) => {
   const { nome, preco, descricao, estoque, categoria } = req.body;
   
-  // Crie um novo objeto Produto
   const novoProduto = new Produto(null, nome, preco, descricao, estoque);
 
   try {
-    // Crie o produto no banco de dados
     const produtoCriado = await Produto.create(novoProduto);
 
-    // Associe o produto à categoria se a categoria estiver presente no JSON
     if (categoria && categoria.id) {
       await Produto.associarCategoria(produtoCriado.id, categoria.id);
     }
