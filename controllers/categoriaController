@@ -1,0 +1,77 @@
+const Categoria = require('../models/categoria'); // Importe a classe Categoria
+
+exports.criarCategoria = async (req, res) => {
+  const { nome } = req.body;
+  const novaCategoria = new Categoria(null, nome); // Crie um novo objeto Categoria
+  try {
+    const categoriaCriada = await Categoria.create(novaCategoria);
+    res.status(201).json(categoriaCriada);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao criar categoria' });
+  }
+};
+
+exports.listarCategorias = async (req, res) => {
+  try {
+    const categorias = await Categoria.findAll();
+    res.json(categorias);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao listar categorias' });
+  }
+};
+
+exports.obterCategoria = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const categoria = await Categoria.findById(id);
+    if (categoria) {
+      res.json(categoria);
+    } else {
+      res.status(404).json({ error: 'Categoria não encontrada' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao obter categoria' });
+  }
+};
+
+exports.atualizarCategoria = async (req, res) => {
+  const { id } = req.params;
+  const { nome } = req.body;
+  try {
+    const categoria = await Categoria.findById(id);
+    if (categoria) {
+      const categoriaAtualizada = await Categoria.update(id, { nome });
+      res.json(categoriaAtualizada);
+    } else {
+      res.status(404).json({ error: 'Categoria não encontrada' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao atualizar categoria' });
+  }
+};
+
+exports.excluirCategoria = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const categoria = await Categoria.findById(id);
+    if (categoria) {
+      await Categoria.delete(id);
+      res.status(204).send(); // Sem conteúdo
+    } else {
+      res.status(404).json({ error: 'Categoria não encontrada' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao excluir categoria' });
+  }
+};
+
+exports.obterProdutosPorCategoria = async (req, res) => {
+  const { idCategoria } = req.params;
+  try {
+    const produtos = await Categoria.getProdutosPorCategoria(idCategoria);
+    res.json(produtos);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao obter produtos por categoria' });
+  }
+};
+
