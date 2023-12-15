@@ -55,6 +55,18 @@ class Produto {
     return db.none('INSERT INTO produto_categoria (produto_id, categoria_id) VALUES ($1, $2)', [idProduto, idCategoria]);
   }
 
+static findByIdWithCategory(id) {
+  return db.oneOrNone(`
+    SELECT p.id, p.nome, p.preco, p.descricao, p.estoque,
+           c.id AS categoria_id, c.nome AS categoria_nome
+    FROM produtos p
+    LEFT JOIN produto_categoria pc ON p.id = pc.produto_id
+    LEFT JOIN categorias c ON pc.categoria_id = c.id
+    WHERE p.id = $1
+  `, [id]);
+}
+
+
 
 }
 
