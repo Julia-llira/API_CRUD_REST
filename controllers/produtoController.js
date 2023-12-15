@@ -14,14 +14,14 @@ exports.listadeProdutos = async (req, res) => {
 exports.verProdutoEspecifico = async (req, res) => {
   const { id } = req.params;
   try {
-    const produto = await Produto.findById(id);
-    if (produto) {
-      res.json(produto);
+    const produtoComCategoria = await Produto.findByIdWithCategory(id);
+    if (produtoComCategoria) {
+      res.json(produtoComCategoria);
     } else {
       res.status(404).json({ error: 'Produto não encontrado' });
     }
   } catch (error) {
-    res.status(500).json({ error: 'Erro ao obter produto' });
+    res.status(500).json({ error: 'Erro ao obter produto com categoria' });
   }
 };
 
